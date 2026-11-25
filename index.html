@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#03060b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+<title>JTF Águila · Terminale operativo</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="fx-scan"></div>
+<div class="fx-vignette"></div>
+<div class="fx-danger"></div>
+
+<main id="app">
+
+  <!-- STANDBY + BOOT -->
+  <section id="s-boot" class="screen active">
+    <div class="standby" id="standby">
+      <div class="standby-dot"></div>
+      <div class="standby-t">TERMINALE IN STANDBY</div>
+      <div class="standby-s">tocca lo schermo per inizializzare</div>
+    </div>
+    <pre class="boot-log" id="boot-log"></pre>
+  </section>
+
+  <!-- LOGIN -->
+  <section id="s-login" class="screen">
+    <form class="login glass hud" id="login-form" autocomplete="off" novalidate>
+      <div class="emblem" id="emblem"></div>
+      <h1 class="glitch" data-text="JTF ÁGUILA">JTF ÁGUILA</h1>
+      <p class="sub">Task force congiunta DEA · FBI — terminale operativo</p>
+      <div class="alert"><span class="blink">●</span> Fuga di notizie in corso · accesso riservato</div>
+      <label for="pid">Pattuglia</label>
+      <div class="inp"><span>&gt;</span><input id="pid" name="jtf-pattuglia" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="60" autocapitalize="characters" enterkeyhint="next"></div>
+      <div class="inp-row">
+        <div>
+          <label for="ppin">PIN pattuglia</label>
+          <div class="inp"><span>#</span><input id="ppin" class="masked" name="jtf-pin" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="8" enterkeyhint="next"></div>
+        </div>
+        <div>
+          <label for="pcod">Codice arbitro</label>
+          <div class="inp"><span>*</span><input id="pcod" class="masked" name="jtf-codice" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters" maxlength="30" enterkeyhint="go"></div>
+        </div>
+      </div>
+      <button class="btn primary wide" id="login-go" type="submit">Accedi</button>
+      <div class="login-err" id="login-err" role="alert"></div>
+      <div class="login-help">Il codice lo dà l'arbitro dell'OBJ 7 quando apre la finestra d'attacco.</div>
+    </form>
+  </section>
+
+  <!-- SCAN -->
+  <section id="s-scan" class="screen">
+    <div class="scanner">
+      <div class="scan-art" id="scan-art"></div>
+      <div class="scan-pct" id="scan-pct">0%</div>
+      <div class="scan-txt" id="scan-txt">Verifica identità…</div>
+      <div class="scan-id">Pattuglia <b id="scan-pid"></b></div>
+    </div>
+  </section>
+
+  <!-- BRIEFING -->
+  <section id="s-brief" class="screen">
+    <div class="brief glass hud">
+      <div class="classified">Riservatissimo · pattuglia <b id="brief-pid"></b></div>
+      <h2>Operazione «La Talpa»</h2>
+      <div class="brief-txt" id="brief-txt"></div>
+      <ol class="brief-steps" id="brief-steps">
+        <li><i>01</i><div><b>Decritta</b><span>il messaggio intercettato dal telefono della talpa</span></div></li>
+        <li><i>02</i><div><b>Localizza</b><span>il telefono incrociando i tre ponti radio</span></div></li>
+        <li><i>03</i><div><b>Smaschera</b><span>l'agente traditore nel dossier della task force</span></div></li>
+      </ol>
+      <div class="brief-foot">
+        <span id="brief-rules"></span>
+        <button id="brief-go" class="btn primary" type="button">Avvia operazione</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUNTDOWN -->
+  <section id="s-count" class="screen">
+    <div class="count"><div class="count-ring"></div><div class="count-num" id="count-num">3</div></div>
+    <div class="count-sub" id="count-sub"></div>
+  </section>
+
+  <!-- MISSION -->
+  <section id="s-mission" class="screen">
+    <div class="mission">
+      <header class="hud-top glass">
+        <div class="brand"><b>JTF ÁGUILA</b><span>Op. La Talpa</span></div>
+        <ol class="phases" id="phases">
+          <li data-p="1"><i>01</i><em>Decrittazione</em></li>
+          <li data-p="2"><i>02</i><em>Triangolazione</em></li>
+          <li data-p="3"><i>03</i><em>Identificazione</em></li>
+        </ol>
+        <div class="patrol">Pattuglia<b id="m-pid"></b></div>
+        <div class="timer" id="timer">
+          <svg viewBox="0 0 64 64"><circle class="tr-bg" cx="32" cy="32" r="28"/><circle class="tr-fg" id="tr-fg" cx="32" cy="32" r="28"/></svg>
+          <span id="m-time">03:00</span>
+        </div>
+      </header>
+      <div class="mission-body">
+        <div class="stage glass hud" id="stage"></div>
+        <aside class="intel glass">
+          <h3><span class="blink">●</span> Dossier intel</h3>
+          <ul id="intel"></ul>
+          <div class="intel-foot">Errori <b id="m-err">0</b></div>
+        </aside>
+      </div>
+    </div>
+    <div class="net" id="net"><span></span>Collegamento al comando…</div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="s-result" class="screen">
+    <div class="result glass hud" id="result"></div>
+  </section>
+
+</main>
+
+<div class="rotate" id="rotate"><div><b>⟳</b>Gira il telefono in verticale</div></div>
+<div id="toast" role="status"></div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
